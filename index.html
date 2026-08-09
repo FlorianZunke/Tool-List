@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tool-List</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="./scripts/db.js" defer></script>
+    <script src="./script.js" defer></script>
+</head>
+
+<body>
+    <main class="container">
+        <h1>Montage-Planer</h1>
+        <p>Was steht heute an?</p>
+
+        <div class="tasks-container">
+
+            <div class="task-item">
+                <input type="checkbox" id="task-window" value="windowInstallation">
+                <label for="task-window">Fenster montage</label>
+            </div>
+
+            <div class="task-item">
+                <input type="checkbox" id="task-door" value="indoorInstallation">
+                <label for="task-door">Innentür montage</label>
+            </div>
+
+            <div class="task-item">
+                <input type="checkbox" id="task-kitchen" value="mainEntranceInstallation">
+                <label for="task-kitchen">Haustür montage</label>
+            </div>
+
+            <div class="task-item">
+                <input type="checkbox" id="task-baseboards" value="restorationWork">
+                <label for="task-baseboards">Restaurierungsarbeiten</label>
+            </div>
+        </div>
+
+        <button id="btn-packliste">Packliste erstellen</button>
+
+        <div class="output-container">
+            <h2>Deine Werkzeugliste:</h2>
+            <ul id="output-liste">
+            </ul>
+        </div>
+    </main>
+</body>
+
+</html>
