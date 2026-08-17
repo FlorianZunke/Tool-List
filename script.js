@@ -1,11 +1,33 @@
 let packButton = document.getElementById("btn-packliste");
 let extraToolButton = document.getElementById("btn-add-extra-tool");
+let outputList = document.getElementById("output-list");
+
+let extra_Tools = {
+
+}
 
 packButton.addEventListener("click", generateToolList);
 extraToolButton.addEventListener("click", addSingleTool);
 
+function createHTML(extraTool) {
+    let listItem = document.createElement("li");
+    let checkbox = document.createElement("input");
+    let label = document.createElement("label");
+
+    checkbox.type = "checkbox";
+    checkbox.id = `tool-${extraTool}`;
+    checkbox.value = extraTool;
+
+    label.htmlFor = `tool-${extraTool}`;
+    label.textContent = " " + extraTool;
+
+    listItem.appendChild(checkbox);
+    listItem.appendChild(label);
+    outputList.appendChild(listItem);
+}
+
 function generateToolList() {
-    let outputList = document.getElementById("output-list");
+    console.log("Gespeicherte Extra-Tools:", extra_Tools);
     let checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
     let selectedTasks = [];
     checkboxes.forEach(checkbox => {
@@ -15,10 +37,12 @@ function generateToolList() {
     let allTools = [];
 
     selectedTasks.forEach(taskKey => {
-        let taskTools = database[taskKey].tools;
+        if (database[taskKey] && database[taskKey].tools) {
+            allTools.push(...database[taskKey].tools);
+        }
 
-        if (taskTools) {
-            allTools.push(...taskTools);
+        if (extra_Tools[taskKey]) {
+            allTools.push(...extra_Tools[taskKey]);
         }
     });
 
@@ -28,44 +52,45 @@ function generateToolList() {
 
     outputList.innerHTML = "";
     filteredTools.forEach(tool => {
-        let listItem = document.createElement("li");
-        let checkbox = document.createElement("input");
-        let label = document.createElement("label");
-        
-        checkbox.type = "checkbox";
-        checkbox.id = `tool-${tool}`;
-        checkbox.value = tool;
-        
-        label.htmlFor = `tool-${tool}`;
-        label.textContent = " " + tool;
-
-        listItem.appendChild(checkbox);
-        listItem.appendChild(label);
-        outputList.appendChild(listItem);
+        createHTML(tool)
     });
 }
 
 function addSingleTool() {
     let inputFieldExtraTool = document.getElementById("input-extra-tool");
+    let selectedCategory = document.getElementById("select-category").value;
     let extraTool = inputFieldExtraTool.value.trim();
 
+    if (!extra_Tools[selectedCategory]) {
+        extra_Tools[selectedCategory] = [];
+    }
+
     if (inputFieldExtraTool.value !== "") {
-        let outputList = document.getElementById("output-list");
-        let listItem = document.createElement("li");
-        let checkbox = document.createElement("input");
-        let label = document.createElement("label");
+        createHTML(extraTool)
 
-        checkbox.type = "checkbox";
-        checkbox.id = `tool-${extraTool}`;
-        checkbox.value = extraTool; 
-
-        label.htmlFor = `tool-${extraTool}`;
-        label.textContent = " " + extraTool;    
-
-        listItem.appendChild(checkbox);
-        listItem.appendChild(label);
-        outputList.appendChild(listItem);   
+        extra_Tools[selectedCategory].push(extraTool);
+        setInLocalstorage();
 
         inputFieldExtraTool.value = "";
     }
 }
+
+function setInLocalstorage(outputList) {
+    let listToString = JSON.stringify(extra_Tools);
+    localStorage.setItem("extra_Tools", listToString);
+}
+
+function loadFromLocalstorage() {
+    let savedData = localStorage.getItem("extra_Tools");
+
+    if (savedData) {
+        extra_Tools = JSON.parse(savedData);
+    }
+}
+
+function removeFromLocalstorage() {
+    localStorage.removeItem("extra_Tools")
+}
+
+
+loadFromLocalstorage()
